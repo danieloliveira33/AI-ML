@@ -5,8 +5,8 @@
 
 import requests
 
-OLLAMA_URL = "http://localhost:11434"
-MODELO = "qwen2.5"
+OLLAMA_URL = "http://host.docker.internal:11434"
+MODELO = "qwen2.5:1.5b"
 
 
 # ==========================================

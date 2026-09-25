@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificador Iris Híbrido</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Animações personalizadas para deixar a interface fluida */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-slide {
+            animation: fadeSlideUp 0.6s ease-out forwards;
+            opacity: 0; /* Começa invisível para a animação funcionar */
+        }
+        .delay-100 { animation-delay: 0.1s; }
+        .delay-200 { animation-delay: 0.2s; }
+        .delay-300 { animation-delay: 0.3s; }
+        
+        /* Efeito de vidro (Glassmorphism) suave */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-emerald-50 via-gray-50 to-teal-100 min-h-screen flex items-center justify-center p-4 md:p-8 font-sans">
+
+    <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- PAINEL DO FORMULÁRIO (Esquerda) -->
+        <div class="lg:col-span-5 glass-card p-8 rounded-3xl shadow-2xl animate-fade-slide relative overflow-hidden">
+            <!-- Detalhe visual de fundo -->
+            <div class="absolute -top-16 -right-16 w-32 h-32 bg-emerald-200 rounded-full mix-blend-multiply filter blur-2xl opacity-70"></div>
+            
+            <div class="mb-8 relative z-10">
+                <div class="inline-block bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide mb-3">
+                    PROJETO DE IA
+                </div>
+                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">🌸 Iris<span class="text-emerald-600">Scan</span></h1>
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    Insira as medidas em centímetros. O nosso sistema irá cruzar a previsão exata de <b>Machine Learning</b> com a análise contextual da <b>IA Generativa</b>.
+                </p>
+            </div>
+            
+            <form method="POST" class="space-y-6 relative z-10">
+                {% csrf_token %}
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="group">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 group-focus-within:text-emerald-600 transition-colors">Comp. Sépala</label>
+                        <input type="number" step="0.1" name="comprimento_sepala" value="{{ dados.comprimento_sepala|default:'5.1' }}" required 
+                            class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all hover:border-emerald-300 shadow-sm">
+                    </div>
+                    <div class="group">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 group-focus-within:text-emerald-600 transition-colors">Larg. Sépala</label>
+                        <input type="number" step="0.1" name="largura_sepala" value="{{ dados.largura_sepala|default:'3.5' }}" required 
+                            class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all hover:border-emerald-300 shadow-sm">
+                    </div>
+                    <div class="group">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 group-focus-within:text-emerald-600 transition-colors">Comp. Pétala</label>
+                        <input type="number" step="0.1" name="comprimento_petala" value="{{ dados.comprimento_petala|default:'1.4' }}" required 
+                            class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all hover:border-emerald-300 shadow-sm">
+                    </div>
+                    <div class="group">
+                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 group-focus-within:text-emerald-600 transition-colors">Larg. Pétala</label>
+                        <input type="number" step="0.1" name="largura_petala" value="{{ dados.largura_petala|default:'0.2' }}" required 
+                            class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all hover:border-emerald-300 shadow-sm">
+                    </div>
+                </div>
+
+                <button type="submit" 
+                    class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                    </svg>
+                    PROCESSAR DADOS
+                </button>
+            </form>
+        </div>
+
+        <!-- PAINEL DE RESULTADOS (Direita) -->
+        <div class="lg:col-span-7 space-y-6 flex flex-col justify-center">
+            
+            <!-- RESULTADO 1: DECISION TREE -->
+            <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border-l-8 border-blue-500 animate-fade-slide delay-100 relative overflow-hidden group hover:shadow-2xl transition-shadow duration-300">
+                <div class="absolute -right-6 -bottom-6 text-8xl opacity-5 transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">🌳</div>
+                
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-3">
+                        <span class="bg-blue-100 text-blue-700 p-2 rounded-lg text-sm font-black shadow-sm">PESSOA 1</span>
+                        Decision Tree
+                    </h2>
+                    <span class="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-1 rounded border border-blue-100">Scikit-learn</span>
+                </div>
+                
+                {% if resultado_dt %}
+                    <div class="bg-gradient-to-r from-blue-50 to-white rounded-2xl p-5 border border-blue-100 shadow-inner transform transition-all duration-500">
+                        <p class="text-xs text-blue-500 font-bold uppercase tracking-widest mb-1">Classificação Direta</p>
+                        <p class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-blue-500">
+                            Iris {{ resultado_dt }}
+                        </p>
+                    </div>
+                {% else %}
+                    <div class="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50/50">
+                        <p class="text-gray-400 font-medium">Aguardando dados para classificação exata...</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- RESULTADO 2: QWEN IA LOCAL -->
+            <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border-l-8 border-purple-500 animate-fade-slide delay-200 relative overflow-hidden group hover:shadow-2xl transition-shadow duration-300">
+                <div class="absolute -right-6 -top-6 text-8xl opacity-5 transform group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-500">🤖</div>
+                
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-3">
+                        <span class="bg-purple-100 text-purple-700 p-2 rounded-lg text-sm font-black shadow-sm">PESSOA 2</span>
+                        IA Generativa
+                    </h2>
+                    <span class="text-xs font-semibold text-purple-500 bg-purple-50 px-2 py-1 rounded border border-purple-100">Qwen 2.5 Local</span>
+                </div>
+                
+                {% if resultado_qwen %}
+                    <div class="bg-gradient-to-r from-purple-50 to-white rounded-2xl p-6 border border-purple-100 shadow-inner">
+                        <div class="prose prose-purple max-w-none text-gray-700 font-medium leading-relaxed">
+                            {{ resultado_qwen|linebreaksbr }}
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50/50 flex flex-col items-center justify-center">
+                        <svg class="w-8 h-8 text-gray-300 mb-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                        </svg>
+                        <p class="text-gray-400 font-medium">Aguardando justificação contextual da IA...</p>
+                    </div>
+                {% endif %}
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>
