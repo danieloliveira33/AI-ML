@@ -1,3 +1,4 @@
 requests
 joblib
 scikit-learn
+django>=4.2

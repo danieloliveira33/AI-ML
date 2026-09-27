@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: identificador-flores
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Configuração essencial para Linux: 
+    # Permite acessar o host a partir do contêiner
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
