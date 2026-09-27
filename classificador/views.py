@@ -24,7 +24,7 @@ def index(request):
         comp_petala = float(request.POST.get('comprimento_petala'))
         larg_petala = float(request.POST.get('largura_petala'))
 
-        # --- MACHINE LEARNING (Pessoa 1) ---
+        # --- MACHINE LEARNING ---
         features = [[comp_sepala, larg_sepala, comp_petala, larg_petala]]
         
         try:
@@ -35,7 +35,7 @@ def index(request):
             resultado_dt = "Erro ao ler modelo"
             print(f"Erro no Scikit-learn: {e}")
 
-        # --- IA GENERATIVA QWEN (Pessoa 2) ---
+        # --- IA GENERATIVA QWEN ---
         resultado_qwen = classificar_flor(
             comp_sepala, larg_sepala, comp_petala, larg_petala
         )
