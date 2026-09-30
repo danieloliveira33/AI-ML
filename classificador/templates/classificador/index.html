@@ -1,146 +1,693 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Classificador Iris Híbrido</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>IrisScan + MCP</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <style>
-        /* Animações personalizadas para deixar a interface fluida */
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+      @keyframes fadeSlideUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
         }
-        .animate-fade-slide {
-            animation: fadeSlideUp 0.6s ease-out forwards;
-            opacity: 0; /* Começa invisível para a animação funcionar */
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
         }
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-        
-        /* Efeito de vidro (Glassmorphism) suave */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      @keyframes growBar {
+        from {
+          width: 0;
         }
+      }
+
+      .animate-fade-slide {
+        animation: fadeSlideUp 0.5s ease-out forwards;
+      }
+
+      .bar-fill {
+        --w: 0%;
+        width: var(--w);
+        animation: growBar 0.9s ease-out both;
+      }
+
+      .glass-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .chat-scroll {
+        scrollbar-width: thin;
+      }
     </style>
-</head>
-<body class="bg-gradient-to-br from-emerald-50 via-gray-50 to-teal-100 min-h-screen flex items-center justify-center p-4 md:p-8 font-sans">
+  </head>
 
-    <div class="max-w-6xl w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
-        <!-- PAINEL DO FORMULÁRIO (Esquerda) -->
-        <div class="lg:col-span-5 glass-card p-8 rounded-3xl shadow-2xl animate-fade-slide relative overflow-hidden">
-            <!-- Detalhe visual de fundo -->
-            <div class="absolute -top-16 -right-16 w-32 h-32 bg-emerald-200 rounded-full mix-blend-multiply filter blur-2xl opacity-70"></div>
-            
-            <div class="mb-8 relative z-10">
-                <div class="inline-block bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide mb-3">
-                    PROJETO DE IA
+  <body
+    class="bg-gradient-to-br from-emerald-50 via-gray-50 to-teal-100 min-h-screen p-4 md:p-8 font-sans"
+  >
+    <div class="max-w-7xl mx-auto">
+      <!-- CABEÇALHO -->
+      <div class="mb-8 text-center">
+        <div
+          class="inline-block bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold tracking-wide mb-3"
+        >
+          QWEN 2.5
+        </div>
+
+        <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800">
+          🌸 Iris<span class="text-emerald-600">Scan</span>
+        </h1>
+      </div>
+
+      <!-- CONTEÚDO -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- ========================================== -->
+        <!-- CLASSIFICAÇÃO -->
+        <!-- ========================================== -->
+
+        <div class="lg:col-span-5 glass-card p-6 md:p-8 rounded-3xl shadow-xl">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-gray-800">🔬 Nova análise</h2>
+
+            <p class="text-sm text-gray-500 mt-1">
+              Execute a análise tradicional com Decision Tree e Qwen.
+            </p>
+          </div>
+
+          <form method="POST" class="space-y-5">
+            {% csrf_token %}
+
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label
+                  class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                >
+                  Comp. Sépala
+                </label>
+
+                <input
+                  type="number"
+                  step="0.1"
+                  name="comprimento_sepala"
+                  value="{{ dados.comprimento_sepala|default:'5.1' }}"
+                  required
+                  class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                >
+                  Larg. Sépala
+                </label>
+
+                <input
+                  type="number"
+                  step="0.1"
+                  name="largura_sepala"
+                  value="{{ dados.largura_sepala|default:'3.5' }}"
+                  required
+                  class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                >
+                  Comp. Pétala
+                </label>
+
+                <input
+                  type="number"
+                  step="0.1"
+                  name="comprimento_petala"
+                  value="{{ dados.comprimento_petala|default:'1.4' }}"
+                  required
+                  class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+
+              <div>
+                <label
+                  class="block text-xs font-bold text-gray-500 uppercase mb-1"
+                >
+                  Larg. Pétala
+                </label>
+
+                <input
+                  type="number"
+                  step="0.1"
+                  name="largura_petala"
+                  value="{{ dados.largura_petala|default:'0.2' }}"
+                  required
+                  class="w-full bg-gray-50 border border-gray-200 rounded-xl p-3 outline-none focus:ring-2 focus:ring-emerald-500"
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              class="w-full bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-4 rounded-xl shadow-lg transition-all"
+            >
+              🌸 PROCESSAR ANÁLISE
+            </button>
+          </form>
+
+          <!-- RESULTADO DECISION TREE -->
+
+          <div class="mt-8 border-t pt-6">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-bold text-gray-800">🌳 Decision Tree</h3>
+
+              <span class="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded">
+                ML
+              </span>
+            </div>
+
+            {% if resultado_dt %}
+
+            <div class="bg-blue-50 border border-blue-100 rounded-xl p-4">
+              <p class="text-xs text-blue-500 uppercase font-bold">
+                Classificação
+              </p>
+
+              <p class="text-2xl font-black text-blue-700">
+                Iris {{ resultado_dt }}
+              </p>
+            </div>
+
+            {% else %}
+
+            <div
+              class="bg-gray-50 border border-dashed rounded-xl p-5 text-center"
+            >
+              <p class="text-sm text-gray-400">
+                Nenhuma análise realizada ainda.
+              </p>
+            </div>
+
+            {% endif %}
+          </div>
+
+          <!-- RESULTADO QWEN -->
+
+          <div class="mt-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="font-bold text-gray-800">🤖 Qwen2.5</h3>
+
+              <span
+                class="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded"
+              >
+                OLLAMA
+              </span>
+            </div>
+
+            {% if resultado_qwen %}
+
+            <div class="bg-purple-50 border border-purple-100 rounded-xl p-4">
+              <p
+                class="text-sm text-gray-700 leading-relaxed whitespace-pre-line"
+              >
+                {{ resultado_qwen }}
+              </p>
+            </div>
+
+            {% else %}
+
+            <div
+              class="bg-gray-50 border border-dashed rounded-xl p-5 text-center"
+            >
+              <p class="text-sm text-gray-400">Aguardando resposta do Qwen.</p>
+            </div>
+
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- MCP CHAT -->
+        <!-- ========================================== -->
+
+        <div
+          class="lg:col-span-7 glass-card rounded-3xl shadow-xl overflow-hidden flex flex-col min-h-[650px]"
+        >
+          <!-- HEADER -->
+
+          <div
+            class="bg-gradient-to-r from-gray-900 to-gray-800 text-white p-5"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <div class="flex items-center gap-3">
+                  <div>
+                    <h2 class="font-bold text-lg">Assistente MCP</h2>
+
+                    <p class="text-xs text-gray-400">
+                      Qwen2.5 → MCP → Banco de dados
+                    </p>
+                  </div>
                 </div>
-                <h1 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-2">🌸 Iris<span class="text-emerald-600">Scan</span></h1>
-                <p class="text-gray-500 text-sm leading-relaxed">
-                    Insira as medidas em centímetros. O nosso sistema irá cruzar a previsão exata de <b>Machine Learning</b> com a análise contextual da <b>IA Generativa</b>.
+              </div>
+
+              <div class="flex items-center gap-2">
+                <span
+                  class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"
+                ></span>
+
+                <span class="text-xs text-gray-300"> Local </span>
+              </div>
+            </div>
+          </div>
+
+          <!-- MENSAGENS -->
+
+          <div
+            id="chatMessages"
+            class="flex-1 p-5 overflow-y-auto chat-scroll space-y-4 bg-gray-50"
+          >
+            <div class="flex justify-start">
+              <div
+                class="max-w-[85%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm p-4 shadow-sm"
+              >
+                <p class="text-sm text-gray-700">Olá! 👋</p>
+
+                <p class="text-sm text-gray-500 mt-2">
+                  Posso consultar o histórico das análises de Machine Learning
+                  através do MCP.
                 </p>
-            </div>
-            
-            <form method="POST" class="space-y-6 relative z-10">
-                {% csrf_token %}
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="group">
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 group-focus-within:text-emerald-600 transition-colors">Comp. Sépala</label>
-                        <input type="number" step="0.1" name="comprimento_sepala" value="{{ dados.comprimento_sepala|default:'5.1' }}" required 
-                            class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all hover:border-emerald-300 shadow-sm">
-                    </div>
-                    <div class="group">
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 group-focus-within:text-emerald-600 transition-colors">Larg. Sépala</label>
-                        <input type="number" step="0.1" name="largura_sepala" value="{{ dados.largura_sepala|default:'3.5' }}" required 
-                            class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all hover:border-emerald-300 shadow-sm">
-                    </div>
-                    <div class="group">
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 group-focus-within:text-emerald-600 transition-colors">Comp. Pétala</label>
-                        <input type="number" step="0.1" name="comprimento_petala" value="{{ dados.comprimento_petala|default:'1.4' }}" required 
-                            class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all hover:border-emerald-300 shadow-sm">
-                    </div>
-                    <div class="group">
-                        <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1 group-focus-within:text-emerald-600 transition-colors">Larg. Pétala</label>
-                        <input type="number" step="0.1" name="largura_petala" value="{{ dados.largura_petala|default:'0.2' }}" required 
-                            class="w-full bg-gray-50 border border-gray-200 text-gray-800 rounded-xl p-3 focus:bg-white focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition-all hover:border-emerald-300 shadow-sm">
-                    </div>
-                </div>
 
-                <button type="submit" 
-                    class="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-emerald-500/30 transition-all duration-300 transform hover:-translate-y-1 hover:scale-[1.02]">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
-                    </svg>
-                    PROCESSAR DADOS
-                </button>
+                <div class="mt-3 flex flex-wrap gap-2">
+                  <button
+                    onclick="
+                      perguntaRapida('Quantas análises existem no histórico?')
+                    "
+                    class="text-xs bg-emerald-50 text-emerald-700 px-3 py-2 rounded-lg hover:bg-emerald-100"
+                  >
+                    📊 Total de análises
+                  </button>
+
+                  <button
+                    onclick="perguntaRapida('Mostre as últimas 5 análises.')"
+                    class="text-xs bg-blue-50 text-blue-700 px-3 py-2 rounded-lg hover:bg-blue-100"
+                  >
+                    🕐 Últimas análises
+                  </button>
+
+                  <button
+                    onclick="
+                      perguntaRapida(
+                        'Quais espécies foram classificadas pela Decision Tree?',
+                      )
+                    "
+                    class="text-xs bg-purple-50 text-purple-700 px-3 py-2 rounded-lg hover:bg-purple-100"
+                  >
+                    🌳 Classificações
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- INPUT -->
+
+          <div class="border-t bg-white p-4">
+            <form id="chatForm" class="flex items-end gap-3">
+              {% csrf_token %}
+
+              <div class="flex-1">
+                <textarea
+                  id="chatInput"
+                  rows="1"
+                  placeholder="Pergunte sobre o histórico das análises..."
+                  class="w-full resize-none bg-gray-50 border border-gray-200 rounded-2xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white"
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                id="sendButton"
+                class="w-12 h-12 flex-shrink-0 rounded-2xl bg-emerald-600 hover:bg-emerald-500 text-white flex items-center justify-center transition-all"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M5 12h14M12 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
             </form>
+
+            <p class="text-[10px] text-gray-400 text-center mt-2">
+              MCP Server e Qwen executados localmente
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ========================================== -->
+      <!-- SOBRE O MODELO -->
+      <!-- ========================================== -->
+
+      <div class="mt-6 glass-card p-6 md:p-8 rounded-3xl shadow-xl">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">🧠 Sobre o modelo</h2>
+
+        <!-- FLUXO: ONDE ML E IA SE CRUZAM -->
+        <div
+          class="flex flex-wrap items-center gap-2 text-xs font-semibold mb-6"
+        >
+          <span class="bg-gray-100 text-gray-600 rounded-full px-3 py-1"
+            >Medidas da flor</span
+          >
+          <span class="text-gray-300">→</span>
+          <span class="bg-blue-50 text-blue-700 rounded-full px-3 py-1"
+            >Decision Tree (ML)</span
+          >
+          <span class="text-gray-400">+</span>
+          <span class="bg-purple-50 text-purple-700 rounded-full px-3 py-1"
+            >Qwen (IA generativa)</span
+          >
+          <span class="text-gray-300">→</span>
+          <span class="bg-gray-100 text-gray-600 rounded-full px-3 py-1"
+            >Histórico no banco</span
+          >
+          <span class="text-gray-300">→</span>
+          <span class="bg-emerald-50 text-emerald-700 rounded-full px-3 py-1"
+            >MCP</span
+          >
+          <span class="text-gray-300">→</span>
+          <span class="bg-purple-50 text-purple-700 rounded-full px-3 py-1"
+            >Qwen responde no chat</span
+          >
         </div>
 
-        <!-- PAINEL DE RESULTADOS (Direita) -->
-        <div class="lg:col-span-7 space-y-6 flex flex-col justify-center">
-            
-            <!-- RESULTADO 1: DECISION TREE -->
-            <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border-l-8 border-blue-500 animate-fade-slide delay-100 relative overflow-hidden group hover:shadow-2xl transition-shadow duration-300">
-                <div class="absolute -right-6 -bottom-6 text-8xl opacity-5 transform group-hover:scale-110 group-hover:rotate-6 transition-transform duration-500">🌳</div>
-                
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-3">
-                        <span class="bg-blue-100 text-blue-700 p-2 rounded-lg text-sm font-black shadow-sm">PESSOA 1</span>
-                        Decision Tree
-                    </h2>
-                    <span class="text-xs font-semibold text-blue-500 bg-blue-50 px-2 py-1 rounded border border-blue-100">Scikit-learn</span>
-                </div>
-                
-                {% if resultado_dt %}
-                    <div class="bg-gradient-to-r from-blue-50 to-white rounded-2xl p-5 border border-blue-100 shadow-inner transform transition-all duration-500">
-                        <p class="text-xs text-blue-500 font-bold uppercase tracking-widest mb-1">Classificação Direta</p>
-                        <p class="text-3xl md:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 to-blue-500">
-                            Iris {{ resultado_dt }}
-                        </p>
-                    </div>
-                {% else %}
-                    <div class="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50/50">
-                        <p class="text-gray-400 font-medium">Aguardando dados para classificação exata...</p>
-                    </div>
-                {% endif %}
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <!-- EXPLICAÇÃO -->
+          <div class="space-y-4 text-sm text-gray-600 leading-relaxed">
+            <p>
+              <strong class="text-blue-700">Machine Learning.</strong>
+              A Decision Tree foi treinada com flores do conjunto Iris (150
+              amostras, quatro medidas cada). Ela aprendeu uma sequência de
+              perguntas sobre as medidas, como "a pétala é menor que 2,45 cm?",
+              que separa as três espécies. As mesmas medidas sempre dão a mesma
+              resposta, e o caminho até ela pode ser inspecionado.
+            </p>
+
+            <p>
+              <strong class="text-purple-700">IA generativa.</strong>
+              O Qwen é um modelo de linguagem pré-treinado que nunca viu esses
+              dados. Ele recebe as medidas em um prompt e responde em texto.
+              Roda localmente pelo Ollama, é bem mais lento e pode variar entre
+              execuções.
+            </p>
+
+            <p>
+              <strong class="text-emerald-700">Onde se cruzam.</strong>
+              Na análise, a mesma flor passa pelos dois e os resultados ficam
+              lado a lado no histórico. No chat, o Qwen atua como agente:
+              entende a pergunta e escolhe uma ferramenta MCP, que consulta o
+              banco ou executa o modelo treinado. O Qwen cuida da linguagem, e a
+              Decision Tree cuida da classificação.
+            </p>
+          </div>
+
+          <!-- MÉTRICAS -->
+          <div>
+            {% if painel %}
+
+            <div class="grid grid-cols-3 gap-3 mb-6">
+              <div class="bg-emerald-50 rounded-xl p-3 text-center">
+                <p class="text-2xl font-black text-emerald-700">
+                  {{ painel.resumo.acuracia_teste }}
+                </p>
+                <p class="text-[11px] text-emerald-600">Acurácia no teste</p>
+              </div>
+
+              <div class="bg-blue-50 rounded-xl p-3 text-center">
+                <p class="text-2xl font-black text-blue-700">
+                  {{ painel.resumo.cv_dt }}
+                </p>
+                <p class="text-[11px] text-blue-600">Validação cruzada</p>
+              </div>
+
+              <div class="bg-amber-50 rounded-xl p-3 text-center">
+                <p class="text-2xl font-black text-amber-700">
+                  {{ painel.resumo.profundidade }}
+                </p>
+                <p class="text-[11px] text-amber-600">Profundidade</p>
+              </div>
             </div>
 
-            <!-- RESULTADO 2: QWEN IA LOCAL -->
-            <div class="glass-card p-6 md:p-8 rounded-3xl shadow-xl border-l-8 border-purple-500 animate-fade-slide delay-200 relative overflow-hidden group hover:shadow-2xl transition-shadow duration-300">
-                <div class="absolute -right-6 -top-6 text-8xl opacity-5 transform group-hover:scale-110 group-hover:-rotate-6 transition-transform duration-500">🤖</div>
-                
-                <div class="flex items-center justify-between mb-4">
-                    <h2 class="text-xl font-bold text-gray-800 flex items-center gap-3">
-                        <span class="bg-purple-100 text-purple-700 p-2 rounded-lg text-sm font-black shadow-sm">PESSOA 2</span>
-                        IA Generativa
-                    </h2>
-                    <span class="text-xs font-semibold text-purple-500 bg-purple-50 px-2 py-1 rounded border border-purple-100">Qwen 2.5 Local</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <!-- MATRIZ DE CONFUSÃO -->
+              <div>
+                <p class="text-xs font-bold text-gray-500 uppercase mb-2">
+                  Matriz de confusão
+                </p>
+
+                <table
+                  class="w-full text-center text-sm border-separate border-spacing-1"
+                >
+                  <thead>
+                    <tr>
+                      <th
+                        class="text-[9px] text-gray-400 font-normal leading-tight"
+                      >
+                        real ↓<br />previsto →
+                      </th>
+                      {% for c in painel.classes %}
+                      <th class="text-[10px] text-gray-500 font-semibold">
+                        {{ c|capfirst }}
+                      </th>
+                      {% endfor %}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for linha in painel.matriz %}
+                    <tr>
+                      <th
+                        class="text-[10px] text-gray-500 font-semibold text-right pr-1"
+                      >
+                        {{ linha.classe|capfirst }}
+                      </th>
+                      {% for cel in linha.celulas %}
+                      <td
+                        class="rounded-lg py-3 font-bold {% if cel.escura %}text-white{% else %}text-gray-700{% endif %}"
+                        data-bg="{{ cel.cor }}"
+                      >
+                        {{ cel.valor }}
+                      </td>
+                      {% endfor %}
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+
+              <!-- IMPORTÂNCIA -->
+              <div>
+                <p class="text-xs font-bold text-gray-500 uppercase mb-2">
+                  Importância das medidas
+                </p>
+
+                <div class="space-y-3">
+                  {% for i in painel.importancias %}
+                  <div>
+                    <div
+                      class="flex justify-between text-xs text-gray-600 mb-1"
+                    >
+                      <span>{{ i.nome }}</span>
+                      <span class="font-semibold">{{ i.txt }}</span>
+                    </div>
+                    <div class="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div
+                        class="bar-fill h-full rounded-full bg-emerald-500"
+                        data-w="{{ i.pct|stringformat:'s' }}"
+                      ></div>
+                    </div>
+                  </div>
+                  {% endfor %}
                 </div>
-                
-                {% if resultado_qwen %}
-                    <div class="bg-gradient-to-r from-purple-50 to-white rounded-2xl p-6 border border-purple-100 shadow-inner">
-                        <div class="prose prose-purple max-w-none text-gray-700 font-medium leading-relaxed">
-                            {{ resultado_qwen|linebreaksbr }}
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="border-2 border-dashed border-gray-200 rounded-2xl p-8 text-center bg-gray-50/50 flex flex-col items-center justify-center">
-                        <svg class="w-8 h-8 text-gray-300 mb-2 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                        </svg>
-                        <p class="text-gray-400 font-medium">Aguardando justificação contextual da IA...</p>
-                    </div>
-                {% endif %}
+              </div>
             </div>
 
+            <p class="text-xs text-gray-400 mt-5">
+              O teste tem só {{ painel.resumo.amostras_teste }} amostras, então
+              a validação cruzada é a medida mais confiável.
+            </p>
+
+            {% else %}
+
+            <div
+              class="bg-gray-50 border border-dashed rounded-xl p-5 text-center"
+            >
+              <p class="text-sm text-gray-400">
+                Métricas não encontradas. Rode
+                <code class="font-mono">python treinamento/metricas.py</code>.
+              </p>
+            </div>
+
+            {% endif %}
+          </div>
         </div>
+      </div>
     </div>
 
-</body>
+    <script>
+      // Valores vindos do Django (data-* -> estilos)
+      document.querySelectorAll("[data-w]").forEach(function (el) {
+        el.style.setProperty("--w", el.dataset.w + "%");
+      });
+
+      document.querySelectorAll("[data-bg]").forEach(function (el) {
+        el.style.background = el.dataset.bg;
+      });
+
+      const chatMessages = document.getElementById("chatMessages");
+      const chatForm = document.getElementById("chatForm");
+      const chatInput = document.getElementById("chatInput");
+      const sendButton = document.getElementById("sendButton");
+
+      function adicionarMensagem(texto, usuario = false) {
+        const container = document.createElement("div");
+
+        container.className = usuario
+          ? "flex justify-end"
+          : "flex justify-start";
+
+        const mensagem = document.createElement("div");
+
+        mensagem.className = usuario
+          ? "max-w-[85%] bg-emerald-600 text-white rounded-2xl rounded-tr-sm p-4 shadow-sm"
+          : "max-w-[85%] bg-white border border-gray-200 rounded-2xl rounded-tl-sm p-4 shadow-sm";
+
+        const textoElement = document.createElement("p");
+
+        textoElement.className = "text-sm whitespace-pre-line leading-relaxed";
+
+        textoElement.textContent = texto;
+
+        mensagem.appendChild(textoElement);
+        container.appendChild(mensagem);
+
+        chatMessages.appendChild(container);
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        return container;
+      }
+
+      function adicionarCarregando() {
+        const container = document.createElement("div");
+
+        container.id = "loadingMessage";
+
+        container.className = "flex justify-start";
+
+        container.innerHTML = `
+        <div class="bg-white border border-gray-200 rounded-2xl rounded-tl-sm p-4 shadow-sm">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-bounce"></span>
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.15s]"></span>
+                <span class="w-2 h-2 bg-emerald-500 rounded-full animate-bounce [animation-delay:0.3s]"></span>
+                <span class="text-xs text-gray-400 ml-1">
+                    Qwen está consultando o MCP...
+                </span>
+            </div>
+        </div>
+    `;
+
+        chatMessages.appendChild(container);
+
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        return container;
+      }
+
+      async function enviarPergunta(pergunta) {
+        if (!pergunta.trim()) {
+          return;
+        }
+
+        adicionarMensagem(pergunta, true);
+
+        chatInput.value = "";
+
+        sendButton.disabled = true;
+        sendButton.classList.add("opacity-50");
+
+        const loading = adicionarCarregando();
+
+        try {
+          const response = await fetch("{% url 'mcp_chat' %}", {
+            method: "POST",
+
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": document.querySelector(
+                "[name=csrfmiddlewaretoken]",
+              ).value,
+            },
+
+            body: JSON.stringify({
+              pergunta: pergunta,
+            }),
+          });
+
+          const data = await response.json();
+
+          loading.remove();
+
+          if (data.resposta) {
+            adicionarMensagem(data.resposta, false);
+          } else {
+            adicionarMensagem("O MCP não retornou uma resposta.", false);
+          }
+        } catch (error) {
+          loading.remove();
+
+          adicionarMensagem("Erro ao consultar o MCP: " + error.message, false);
+        } finally {
+          sendButton.disabled = false;
+          sendButton.classList.remove("opacity-50");
+
+          chatInput.focus();
+        }
+      }
+
+      chatForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        enviarPergunta(chatInput.value);
+      });
+
+      chatInput.addEventListener("keydown", function (event) {
+        if (event.key === "Enter" && !event.shiftKey) {
+          event.preventDefault();
+
+          enviarPergunta(chatInput.value);
+        }
+      });
+
+      function perguntaRapida(pergunta) {
+        enviarPergunta(pergunta);
+      }
+    </script>
+  </body>
 </html>

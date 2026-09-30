@@ -1,0 +1,58 @@
+{
+  "dataset": {
+    "amostras": 150,
+    "treino": 120,
+    "teste": 30
+  },
+  "decision_tree": {
+    "profundidade": 6,
+    "folhas": 10,
+    "acuracia_treino": 1.0,
+    "acuracia_teste": 1.0,
+    "matriz_confusao": [
+      [
+        10,
+        0,
+        0
+      ],
+      [
+        0,
+        9,
+        0
+      ],
+      [
+        0,
+        0,
+        11
+      ]
+    ],
+    "importancia_features": {
+      "sepal length (cm)": 0.0,
+      "sepal width (cm)": 0.0167,
+      "petal length (cm)": 0.9061,
+      "petal width (cm)": 0.0772
+    }
+  },
+  "validacao_cruzada_5_folds": {
+    "decision_tree": {
+      "media": 0.9533,
+      "desvio": 0.034
+    },
+    "decision_tree_profundidade_3": {
+      "media": 0.9733,
+      "desvio": 0.0249
+    },
+    "random_forest": {
+      "media": 0.9667,
+      "desvio": 0.0211
+    },
+    "knn": {
+      "media": 0.96,
+      "desvio": 0.0249
+    },
+    "regressao_logistica": {
+      "media": 0.96,
+      "desvio": 0.0389
+    }
+  }
+}

@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   web:
@@ -10,7 +10,8 @@ services:
       - .:/app
     environment:
       - PYTHONUNBUFFERED=1
-    # Configuração essencial para Linux: 
+      - OLLAMA_URL=http://host.docker.internal:11434
+    # Configuração essencial para Linux:
     # Permite acessar o host a partir do contêiner
     extra_hosts:
       - "host.docker.internal:host-gateway"
