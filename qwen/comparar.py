@@ -9,7 +9,7 @@ import requests
 import joblib
 
 OLLAMA_URL = "http://localhost:11434"
-MODELO_QWEN = "qwen2.5"
+MODELO_QWEN = "qwen2.5:3b"
 
 # Caminho para o modelo salvo pela Pessoa 1
 RAIZ = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
