@@ -16,7 +16,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OLLAMA_URL = os.environ.get("OLLAMA_URL", "http://localhost:11434")
 
 # 1.5B erra a escolha de ferramentas com frequência. Prefira 7b (ou 3b).
-QWEN_MODEL = os.environ.get("QWEN_AGENT_MODEL", "qwen2.5")
+QWEN_MODEL = os.environ.get("QWEN_AGENT_MODEL", "qwen2.5:3b")
 
 INSTRUCOES = """
 Você é um assistente que consulta o histórico de análises de classificação Iris.
