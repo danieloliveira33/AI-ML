@@ -12,7 +12,7 @@ OLLAMA_URL = os.environ.get(
     "http://localhost:11434"
 )
 
-MODELO = "qwen2.5:1.5b"
+MODELO = "qwen2.5:3b"
 
 
 # ==========================================
