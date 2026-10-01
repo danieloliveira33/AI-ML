@@ -8,7 +8,7 @@ import json
 import requests
 
 OLLAMA_URL = "http://localhost:11434"
-MODELO = "qwen2.5"
+MODELO = "qwen2.5:3b"
 
 
 # ==========================================
