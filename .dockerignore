@@ -1,0 +1,9 @@
+.git
+__pycache__
+*.pyc
+*.zip
+db.sqlite3
+db.sqlite3-journal
+.env
+.venv
+venv

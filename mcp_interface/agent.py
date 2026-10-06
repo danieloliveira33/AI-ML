@@ -42,15 +42,20 @@ Regras:
 def criar_agente():
     server_path = os.path.join(BASE_DIR, "mcp_interface", "server.py")
 
+    env_servidor = {
+        "MCP_USE_ANONYMIZED_TELEMETRY": "false",
+        "PYTHONUNBUFFERED": "1",
+    }
+    for chave in ("DJANGO_DB_PATH", "OLLAMA_URL"):
+        if os.environ.get(chave):
+            env_servidor[chave] = os.environ[chave]
+
     config = {
         "mcpServers": {
             "historico_ml": {
                 "command": sys.executable,
                 "args": [server_path],
-                "env": {
-                    "MCP_USE_ANONYMIZED_TELEMETRY": "false",
-                    "PYTHONUNBUFFERED": "1",
-                },
+                "env": env_servidor,
             }
         }
     }

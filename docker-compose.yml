@@ -6,12 +6,17 @@ services:
     container_name: identificador-flores
     ports:
       - "8000:8000"
-    volumes:
-      - .:/app
     environment:
       - PYTHONUNBUFFERED=1
       - OLLAMA_URL=http://host.docker.internal:11434
-    # Configuração essencial para Linux:
-    # Permite acessar o host a partir do contêiner
+      - DJANGO_DB_PATH=/data/db.sqlite3
+    volumes:
+      # ":z" ajusta o rótulo SELinux (Fedora/RHEL);
+      - .:/app:z
+      - db_data:/data
+
     extra_hosts:
       - "host.docker.internal:host-gateway"
+
+volumes:
+  db_data:

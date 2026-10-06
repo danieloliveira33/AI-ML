@@ -1,6 +1,6 @@
 requests
 joblib
-scikit-learn
+scikit-learn==1.7.2
 django>=4.2
 mcp-use
 langchain-ollama
